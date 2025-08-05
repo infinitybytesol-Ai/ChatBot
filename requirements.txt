@@ -2,4 +2,4 @@ fastapi
 uvicorn
 python-dotenv
 requests
-PyMuPDF
+PyMuPDF==1.23.3

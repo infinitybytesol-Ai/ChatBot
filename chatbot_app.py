@@ -31,11 +31,18 @@ def query_groq_llama(user_input, context):
     payload = {
         "model": "llama3-70b-8192",
         "messages": [
-            {"role": "system", "content": "You are a helpful InfinityByte Stars assistant. Only use the provided context."},
+            {
+                "role": "system",
+                "content": (
+                    "You are a professional assistant for InfinityByte Stars. "
+                    "Answer concisely, directly, and only from the given context. "
+                    "Do not add extra explanations or greetings. Provide crisp, clear answers."
+                )
+            },
             {"role": "system", "content": f"Context:\n{context}"},
             {"role": "user", "content": user_input}
         ],
-        "temperature": 0.3
+        "temperature": 0.2  # Lower temp = more precise answers
     }
     response = requests.post(url, headers=headers, json=payload)
     return response.json()["choices"][0]["message"]["content"]

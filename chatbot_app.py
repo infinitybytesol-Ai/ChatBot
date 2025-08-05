@@ -31,25 +31,30 @@ def query_groq_llama(user_input, context):
     payload = {
         "model": "llama3-70b-8192",
         "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a professional assistant for InfinityByte Stars. "
-                    "Answer concisely, directly, and only from the given context. "
-                    "Do not add extra explanations or greetings. Provide crisp, clear answers."
-                )
-            },
+            {"role": "system", "content": "You are a helpful InfinityByte Stars assistant. Only use the provided context."},
             {"role": "system", "content": f"Context:\n{context}"},
             {"role": "user", "content": user_input}
         ],
-        "temperature": 0.2  # Lower temp = more precise answers
+        "temperature": 0.3
     }
     response = requests.post(url, headers=headers, json=payload)
     return response.json()["choices"][0]["message"]["content"]
 
+
+
 @app.post("/chat/")
 def chat_endpoint(data: ChatRequest):
     user_input = data.message.lower()
+
+    # Greetings Handling
+    greetings = ["hi", "hello", "hey", "salam", "assalamualaikum"]
+    if any(greet in user_input for greet in greetings):
+        return {"response": "👋 Hello! I'm InfinityByte Stars assistant. How can I help you today?"}
+
+    # Farewells Handling
+    farewells = ["thank you", "thanks", "goodbye", "bye", "see you"]
+    if any(farewell in user_input for farewell in farewells):
+        return {"response": " You're welcome! If you need further assistance, feel free to reach out. Goodbye!"}
 
     # Check for general info request
     if any(keyword in user_input for keyword in ["office", "name"]):

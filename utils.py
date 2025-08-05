@@ -1,11 +1,14 @@
-import fitz  # PyMuPDF
+import PyPDF2  # Replacing fitz (PyMuPDF)
 
 def load_pdf_text(pdf_path):
-    doc = fitz.open(pdf_path)
-    full_text = ""
-    for page in doc:
-        full_text += page.get_text()
-    return full_text
+    text = ""
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
+    return text
 
 def find_relevant_chunks(text, query, window=700):
     lower_text = text.lower()

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware  # <-- CORS Middleware
 import os
 from dotenv import load_dotenv
 from utils import load_pdf_text, find_relevant_chunks
@@ -7,6 +8,15 @@ import requests
 
 load_dotenv()
 app = FastAPI()
+
+# Enable CORS (Allow frontend to access API)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # <-- Allow all origins (change to specific domain in production)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Environment & PDF Loading
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
